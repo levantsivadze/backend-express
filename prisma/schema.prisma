@@ -13,20 +13,20 @@ model User {
   password       String
   name           String?
   createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  updatedAt      DateTime        @default(now())
   watchlistItems WatchlistItem[]
 }
 
 model Movie {
   id             String          @id @default(uuid())
   title          String
-  description    String?
+  overview    String?
   releaseYear    Int?
-  genre          String?
+  genres         String[]
   director       String?
   posterUrl      String?
   createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  updatedAt      DateTime        @default(now())
   watchlistItems WatchlistItem[]
 }
 
@@ -34,6 +34,7 @@ enum WatchlistStatus {
   PLANNED
   WATCHING
   COMPLETED
+  DROPPED
 }
 
 model WatchlistItem {

@@ -1,0 +1,8 @@
+-- AlterEnum
+ALTER TYPE "WatchlistStatus" ADD VALUE 'DROPPED';
+
+-- AlterTable
+ALTER TABLE "Movie" ALTER COLUMN "updatedAt" SET DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "updatedAt" SET DEFAULT CURRENT_TIMESTAMP;

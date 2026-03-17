@@ -40,7 +40,8 @@ const getMovieById = async (req, res) => {
 
 const createMovie = async (req, res) => {
   try {
-    const { title, description, releaseYear, genre, director, posterUrl } = req.body;
+    const { title, overview, releaseYear, genre, director, posterUrl } =
+      req.body;
 
     if (!title) {
       return res.status(400).json({ message: 'Title is required' });
@@ -49,7 +50,7 @@ const createMovie = async (req, res) => {
     const movie = await prisma.movie.create({
       data: {
         title,
-        description,
+        overview,
         releaseYear,
         genre,
         director,
@@ -70,7 +71,8 @@ const createMovie = async (req, res) => {
 const updateMovie = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, releaseYear, genre, director, posterUrl } = req.body;
+    const { title, overview, releaseYear, genre, director, posterUrl } =
+      req.body;
 
     const existingMovie = await prisma.movie.findUnique({
       where: { id },
@@ -84,7 +86,7 @@ const updateMovie = async (req, res) => {
       where: { id },
       data: {
         title,
-        description,
+        overview,
         releaseYear,
         genre,
         director,

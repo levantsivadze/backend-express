@@ -37,4 +37,63 @@ const addToWatchlist = async (req, res) => {
   });
 };
 
-export { addToWatchlist };
+const removeFromWatchlist = async (req, res) => {
+  //find watchlist item and verify ownership
+  const { id: userId } = req.user;
+  const { id: watchlistItemId } = req.params;
+  const watchlistItem = await prisma.watchlistItem.findUnique({
+    where: { id: watchlistItemId },
+  });
+
+  if (!watchlistItem) {
+    return res.status(404).json({ message: 'Watchlist item not found' });
+  }
+  if (watchlistItem.userId !== userId) {
+    return res
+      .status(403)
+      .json({ message: 'Not authorized to delete this watchlist item' });
+  }
+  await prisma.watchlistItem.delete({
+    where: { id: watchlistItemId },
+  });
+  res.status(200).json({
+    status: 'success',
+    message: 'Watchlist item deleted successfully',
+  });
+  //ensure only owner can delete
+};
+
+const updateWatchlistItem = async (req, res) => {
+  const { id: userId } = req.user;
+  const { id: watchlistItemId } = req.params;
+  const { status, rating, notes } = req.body;
+
+  const watchlistItem = await prisma.watchlistItem.findUnique({
+    where: { id: watchlistItemId },
+  });
+
+  if (!watchlistItem) {
+    return res.status(404).json({ message: 'Watchlist item not found' });
+  }
+
+  if (watchlistItem.userId !== userId) {
+    return res
+      .status(403)
+      .json({ message: 'Not authorized to update this watchlist item' });
+  }
+
+  const updateData = {};
+  if (status !== undefined) updateData.status = status;
+  if (rating !== undefined) updateData.rating = rating;
+  if (notes !== undefined) updateData.notes = notes;
+  const updatedWatchlistItem = await prisma.watchlistItem.update({
+    where: { id: watchlistItemId },
+    data: updateData,
+  });
+  res.status(200).json({
+    status: 'success',
+    data: { updatedWatchlistItem },
+  });
+};
+
+export { addToWatchlist, removeFromWatchlist, updateWatchlistItem };
